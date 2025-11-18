@@ -3,24 +3,16 @@ use crate::abi::constant::{POOL_USDC_USDT_ADDRESS, USDC_ADDRESS, USDT_ADDRESS, M
 
 use alloy::{
     providers::{Provider, ProviderBuilder},
-    rpc::client::RpcClient,
     sol_types::SolCall,
-    transports::http::Http,
 };
 use eyre::Result;
-use std::sync::Arc;
 use crate::abi::{IMulticall, IUniswapv3pool, IERC20};
 use crate::abi::Multicall3::{Call3};
 
 pub async fn run(rpc_url: &str) -> Result<()> {
 
     let url = rpc_url.parse()?;
-    let http = Http::new(url);
-    let client = RpcClient::new(http, true);
-    let provider = ProviderBuilder::new()
-        .disable_recommended_fillers()
-        .connect_client(client);
-    let provider = Arc::new(provider);
+    let provider = ProviderBuilder::new().connect_http(url);
 
     let mut calls = Vec::new();
 
